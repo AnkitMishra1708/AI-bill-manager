@@ -28,11 +28,11 @@ Database
 
 ### Upload Invoice
 
-![Upload Invoice](./screenshots/upload.png)
+![Upload Invoice](./Screenshots/upload.png)
 
 ### Invoice Details
 
-![Invoice Details](./screenshots/BillDetailedPage.png)
+![Invoice Details](./Screenshots/BillDetailedPage.png)
 
 ## Live
 
