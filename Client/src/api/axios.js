@@ -1,35 +1,45 @@
 import axios from "axios";
-import { refreshAccessToken } from "./authApi";
+
+const baseURL = import.meta.env.VITE_API_URL;
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL,
   withCredentials: true,
 });
+
+const authApi = axios.create({
+  baseURL,
+  withCredentials: true,
+});
+
+const AUTH_EXCLUDED_PATHS = ["/users/refresh-access-token", "/users/login"];
 
 let isRefreshing = false;
 let failedQueue = [];
 
 const processQueue = (error) => {
   failedQueue.forEach(({ resolve, reject }) => {
-    if (error) {
-      reject(error);
-    } else {
-      resolve();
-    }
+    if (error) reject(error);
+    else resolve();
   });
-
   failedQueue = [];
 };
 
+const isExcludedPath = (url = "") =>
+  AUTH_EXCLUDED_PATHS.some((path) => url.includes(path));
+
 api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
 
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response?.status !== 401 || originalRequest._retry) {
+    if (
+      !originalRequest ||
+      error.response?.status !== 401 ||
+      originalRequest._retry ||
+      isExcludedPath(originalRequest.url)
+    ) {
       return Promise.reject(error);
     }
 
@@ -38,9 +48,7 @@ api.interceptors.response.use(
     if (isRefreshing) {
       return new Promise((resolve, reject) => {
         failedQueue.push({ resolve, reject });
-      }).then(() => {
-        return api(originalRequest);
-      });
+      }).then(() => api(originalRequest));
     }
 
     isRefreshing = true;
@@ -51,6 +59,8 @@ api.interceptors.response.use(
       return api(originalRequest);
     } catch (refreshError) {
       processQueue(refreshError);
+
+      window.dispatchEvent(new CustomEvent("auth:logout"));
 
       return Promise.reject(refreshError);
     } finally {
