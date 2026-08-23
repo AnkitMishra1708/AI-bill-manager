@@ -28,7 +28,7 @@ Database
 
 ### Upload Invoice
 
-![Upload Invoice](./Screenshots/upload.png)
+![Upload Invoice](./Screenshots/Upload.png)
 
 ### Invoice Details
 
