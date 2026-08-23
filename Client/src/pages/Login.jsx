@@ -14,12 +14,15 @@ export const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
 
+        setLoading(true);
+
         try {
             await login(email, password);
-            setLoading(true)
             navigate("/");
         } catch (error) {
             console.log(error);
+        } finally {
+            setLoading(false);
         }
     };
 

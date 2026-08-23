@@ -46,10 +46,8 @@ api.interceptors.response.use(
     isRefreshing = true;
 
     try {
-      await refreshAccessToken();
-
+      await authApi.post("/users/refresh-access-token");
       processQueue(null);
-
       return api(originalRequest);
     } catch (refreshError) {
       processQueue(refreshError);
