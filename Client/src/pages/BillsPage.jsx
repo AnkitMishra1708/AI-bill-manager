@@ -39,8 +39,14 @@ export const BillsPage = () => {
     )
   }
 
-  const totalSpend = Number((allInvoice?.reduce((total, current) => total + current.totalAmount, 0)).toFixed(1));
-  const averageSpend = Number((totalSpend / (allInvoice?.length || 1)).toFixed(1));
+  const totalSpend = Number(
+    allInvoice?.reduce((total, current) => total + Number(current.totalAmount || 0), 0)
+      .toFixed(1)
+  );
+
+  const averageSpend = Number(
+    (totalSpend / (allInvoice?.length || 1)).toFixed(1)
+  );
   return (
     <>
       <div className="flex gap-5">

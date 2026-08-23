@@ -7,6 +7,7 @@ export const Login = () => {
     const { login } = useAuth();
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
+    const [loading, setLoading] = useState(false);
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(true);
 
@@ -14,7 +15,10 @@ export const Login = () => {
         e.preventDefault();
 
         try {
-            await login(email, password);
+            setTimeout(async () => {
+                await login(email, password);
+            }, 2000);
+            setLoading(true)
             navigate("/");
         } catch (error) {
             console.log(error);
@@ -86,7 +90,7 @@ export const Login = () => {
                             type="submit"
                             className="group relative cursor-pointer flex w-full justify-center rounded-md bg-black px-3 py-2.5 text-sm font-semibold text-white hover:bg-gray-800 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-black transition-colors duration-200"
                         >
-                            Login
+                            {loading ? "Logging..." : "Login"}
                         </button>
                     </div>
                     <div className="text-center text-sm text-gray-600">
