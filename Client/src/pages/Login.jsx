@@ -15,9 +15,7 @@ export const Login = () => {
         e.preventDefault();
 
         try {
-            setTimeout(async () => {
-                await login(email, password);
-            }, 2000);
+            await login(email, password);
             setLoading(true)
             navigate("/");
         } catch (error) {
