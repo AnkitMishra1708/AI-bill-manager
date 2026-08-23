@@ -96,6 +96,7 @@ export const login = asyncHandler(async (req, res, next) => {
   const option = {
     httpOnly: true,
     secure: true,
+    sameSite: "none",
   };
 
   return res
