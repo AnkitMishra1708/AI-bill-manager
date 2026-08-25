@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { AppLayout } from "./layouts/AppLayout";
 import { ProtectedRoute } from "./components/index.js";
 import { BillDetailPage, BillsPage, Login, Profile, Register, UploadPage, ErrorPage } from "./pages/index.js";
+import { Toaster } from 'react-hot-toast';
 
 const router = createBrowserRouter([
     {
@@ -57,5 +58,10 @@ const router = createBrowserRouter([
 ]);
 
 export default function App() {
-    return <RouterProvider router={router} />;
+    return (
+        <>
+            <Toaster position="top-center" reverseOrder={false} />
+            <RouterProvider router={router} />
+        </>
+    );
 }

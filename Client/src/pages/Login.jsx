@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom"
 import { Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import toast from 'react-hot-toast';
 
 export const Login = () => {
     const { login } = useAuth();
@@ -13,14 +14,13 @@ export const Login = () => {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-
         setLoading(true);
-
         try {
             await login(email, password);
+            toast.success('Logged In');
             navigate("/");
         } catch (error) {
-            console.log(error);
+            toast.error(error?.response?.data?.message)
         } finally {
             setLoading(false);
         }
@@ -50,7 +50,7 @@ export const Login = () => {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 className="relative block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-sm"
-                                placeholder="name@example.com"
+                                placeholder="tasty@example.com"
                             />
                         </div>
 
@@ -96,10 +96,8 @@ export const Login = () => {
                     </div>
                     <div className="text-center text-sm text-gray-600">
                         Don't have an account?{' '}
-                        <Link to="/register">
-                            <p className="font-medium text-black underline hover:text-gray-700 transition-colors">
-                                Register here
-                            </p>
+                        <Link to="/register" className="font-medium text-black underline hover:text-gray-700 transition-colors">
+                            Register
                         </Link>
                     </div>
                 </form>

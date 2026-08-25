@@ -2,11 +2,10 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ChevronLeft, ChevronDown, CircleHelp, ChevronUp } from "lucide-react";
 import { detailedInvoiceApi } from "../api/invoice"
-import { StatCard, FormatDate } from "../components/index.js"
+import { StatCard, FormatDate, LoadingSpinner } from "../components/index.js"
 
 export const BillDetailPage = () => {
   const { id } = useParams();
-
   const [bill, setBill] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,49 +13,43 @@ export const BillDetailPage = () => {
   const [expanded, setExpanded] = useState(false);
   const [showJson, setShowJson] = useState(false);
 
-  const loadBill = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await detailedInvoiceApi(id);
-      const data = response.data.data
-      setBill(data);
-      setLoading(false)
-    } catch (err) {
-      setLoading(false)
-      console.log(error);
-    }
-  }
-
   useEffect(() => {
+    const loadBill = async () => {
+      try {
+        const response = await detailedInvoiceApi(id);
+        const data = response?.data?.data
+        setBill(data);
+        setLoading(false)
+      } catch (err) {
+        setLoading(false)
+        setError(err.message)
+        console.log(err.message);
+      }
+    }
+
     loadBill();
-    setLoading(false)
   }, [id]);
 
-  if (loading) {
-    return (
-      <h1 className="flex justify-center items-center text-4xl font-bold">Loading...</h1>
-    )
+  if (loading) return <LoadingSpinner />;
+  if (error) {
+    return (<p className='text-3xl font-bold'>Oops, something went wrong.</p>)
   }
 
-  if (!bill) return null;
-
   const productList = bill?.productList || [];
-  const itemCount = productList.length;
-  const averageSpend = bill?.totalAmount / productList?.length;
-  const highest = productList.reduce((max, i) => Math.max(max, i.totalPrice), 0);
+  const itemCount = productList?.length || 0;
+  const averageSpend = (bill?.totalAmount / productList?.length) || 0;
+  const highest = (productList?.reduce((max, i) => Math.max(max, i.totalPrice), 0)) || 0;
 
-  const visibleItems = expanded ? productList : productList.slice(0, 5);
-  const hiddenCount = productList.length - visibleItems.length;
+  const visibleItems = expanded ? productList : productList?.slice(0, 5);
+  const hiddenCount = productList?.length - visibleItems?.length;
 
   const sortedForBreakdown = [...productList].sort((a, b) => b.totalPrice - a.totalPrice);
   const maxForBar = sortedForBreakdown[0]?.totalPrice || 1;
-
   return (
-    <div className="max-w-3xl mx-auto px-6">
+    <div className="max-w-3xl mx-auto ">
       <BackLink />
 
-      <div className="mt-4 relative rounded-lg overflow-hidden border border-gray-200 h-48">
+      <div className="mt-4 relative rounded-lg overflow-hidden border border-gray-200 h-22 sm:h-64">
         {bill.imageUrl ? (
           <img
             src={bill.imageUrl}
@@ -83,7 +76,7 @@ export const BillDetailPage = () => {
         </div>
       </div>
 
-      <div className="mt-4 grid grid-cols-3 divide-x divide-gray-200 border border-gray-200 rounded-lg bg-white">
+      <div className="flex flex-col mt-5 sm:flex-row gap-4">
         <StatCard label="Items" value={itemCount} />
         <StatCard label="Avg Price" value={formatCurrency(averageSpend)} />
         <StatCard label="Highest" value={formatCurrency(highest)} />
@@ -192,19 +185,9 @@ export const BillDetailPage = () => {
         <div className="relative group">
           <CircleHelp
             size={15}
-            className="cursor-pointer text-gray-400 transition-colors duration-200 hover:text-gray-600"
-          />
-
+            className="cursor-pointer text-gray-400 transition-colors duration-200 hover:text-gray-600" />
           <div
-            className="
-      pointer-events-none absolute bottom-full left-1/2 mb-2
-      -translate-x-1/2 translate-y-1
-      whitespace-nowrap rounded-md bg-gray-800 px-2 py-1
-      text-xs text-white shadow-sm
-      opacity-0 transition-all duration-200 ease-out
-      group-hover:translate-y-0 group-hover:opacity-100
-      "
-          >
+            className="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 translate-y-1 whitespace-nowrap rounded-md bg-gray-800 px-2 py-1 text-xs text-white shadow-sm opacity-0 transition-all duration-200 ease-out group-hover:translate-y-0 group-hover:opacity-100" >
             Want the above product data? Here’s the JSON.
           </div>
         </div>

@@ -8,7 +8,7 @@ export const BillRow = ({ bill }) => {
     <button
       type="button"
       onClick={() => navigate(`/bills/${bill._id}`)}
-      className="flex w-full items-center gap-4 border-b border-stone-100 px-5 py-4 text-left last:border-b-0 cursor-pointer hover:bg-stone-50"
+      className="flex w-full items-center gap-4 border-b border-stone-100 px-5 py-4 text-left last:border-b-1cursor-pointer hover:bg-stone-50"
     >
       <img
         src={bill.imageUrl}

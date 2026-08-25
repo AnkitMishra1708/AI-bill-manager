@@ -17,8 +17,8 @@ export const AppLayout = () => {
       <header className="flex items-center justify-between sticky top-0 z-50 border-b border-stone-200 bg-white px-8 py-4">
         <NavLink to="/" end><div className="flex items-center gap-2">
           <div className="flex items-center gap-1 text-lg font-semibold text-stone-900">
-            <p className="font-extrabold">GOAT,</p>
-            <p>{user?.fullName}</p>
+            <p className="font-extrabold">GOAT</p>
+            <p className="hidden md:block">, {user?.fullName}</p>
           </div>
         </div></NavLink>
 
@@ -31,20 +31,21 @@ export const AppLayout = () => {
         <div className="flex justify-center items-center gap-3">
           <button
             onClick={() => navigate("/upload")}
-            className="flex items-center gap-2 cursor-pointer rounded-md px-6 py-2 bg-black text-sm font-medium text-white hover:bg-gray-800"
+            className="flex items-center justify-center gap-2 cursor-pointer rounded-md p-2 sm:px-6 sm:py-2 bg-black text-sm font-medium text-white hover:bg-gray-800 transition"
+            title="Upload Bill"
           >
             <Upload className="h-4 w-4" />
-            Upload Bill
+            <span className="hidden sm:inline">Upload Bill</span>
           </button>
 
           <NavLink to="/profile" end>
-            <span className="cursor-pointer rounded-lg px-3 py-2 text-lg font-semibold text-stone-900 transition-colors duration-200 hover:bg-gray-100">
+            <span className="cursor-pointer rounded-lg py-2 text-lg font-semibold text-stone-900">
               Profile
             </span></NavLink>
         </div>
       </header>
 
-      <main className="mx-auto max-w-5xl px-8 py-8">
+      <main className="mx-auto max-w-5xl px-3 py-8">
         <Outlet />
       </main>
     </div>

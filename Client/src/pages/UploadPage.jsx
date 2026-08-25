@@ -7,7 +7,6 @@ import { saveInvoiceApi } from "../api/invoice";
 export const UploadPage = () => {
   const [file, setFile] = useState(null);
   const [extractData, setExtractData] = useState(null);
-  const [saved, setSaved] = useState(null);
   const [status, setStatus] = useState("idle");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -35,7 +34,6 @@ export const UploadPage = () => {
       }
     } catch (error) {
       setError(error.response.data)
-      console.log(error.response.data)
       setLoading(false);
     }
   };
@@ -44,8 +42,7 @@ export const UploadPage = () => {
     try {
       if (!file) return;
       setLoading(true);
-      const response = await saveInvoiceApi(payload);
-      setSaved(response.data.data)
+      await saveInvoiceApi(payload);
       setStatus("success")
     } catch (error) {
       setLoading(false);
@@ -95,14 +92,24 @@ export const UploadPage = () => {
             {file.name}
           </p>
 
-          <button
-            type="button"
-            onClick={handleExtract}
-            disabled={loading}
-            className="mt-4 cursor-pointer rounded-lg bg-black px-5 py-2.5 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {loading ? "Extracting..." : "Extract"}
-          </button>
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={handleExtract}
+              disabled={loading}
+              className="mt-4 cursor-pointer rounded-lg bg-black px-5 py-2.5 text-sm font-medium hover:bg-gray-700 text-white disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {loading ? "Extracting..." : "Extract"}
+            </button>
+            <button
+              type="button"
+              onClick={() => setStatus("idle")}
+              className="mt-4 cursor-pointer rounded-lg px-5 py-2.5 text-sm font-medium text-red-500 hover:bg-red-100 transition duration-300"
+            >
+              Cancel
+            </button>
+          </div>
+
           {error ? <p className="text-red-600 mt-4">{error.errors}</p> : null}
         </div>;
 

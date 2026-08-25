@@ -2,27 +2,31 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LogOut } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-import { logoutUser } from "../api/authApi";
 import { FormatDate } from "../components/index"
+import toast from 'react-hot-toast';
 
 export const Profile = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
-
+  const { user, logout } = useAuth();
   const [loggingOut, setLoggingOut] = useState(false);
+  const [error, setError] = useState(null)
 
   async function handleLogout() {
     setLoggingOut(true);
     try {
-      await logoutUser();
+      await logout();
+      toast.success("Logged Out")
     } catch {
+      setError(err.message)
     } finally {
       navigate("/login");
     }
   }
 
   if (!user) return null;
-
+  if (error) {
+    return (<p className='text-3xl font-bold'>Oops, something went wrong.</p>)
+  }
   return (
     <div className="max-w-md mx-auto px-6 py-10">
       <h1 className="text-xl font-semibold text-gray-900 mb-4">Welcome, {user?.fullName}</h1>

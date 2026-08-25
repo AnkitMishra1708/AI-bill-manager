@@ -34,6 +34,4 @@ Database
 
 ![Invoice Details](./Screenshots/BillDetailedPage.png)
 
-## Live
-
-**[BillVault:](https://billvault-u1s5.onrender.com)**
+**[Site is live check it out.](https://billvault-u1s5.onrender.com)**

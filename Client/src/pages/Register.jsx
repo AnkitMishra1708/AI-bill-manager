@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 import { registerUser } from "../api/authApi";
+import toast from 'react-hot-toast';
 
 export const Register = () => {
   const navigate = useNavigate();
@@ -16,9 +17,10 @@ export const Register = () => {
 
     try {
       await registerUser({ fullName, email, password });
+      toast.success("User registered")
       navigate("/login");
     } catch (error) {
-      console.log(error);
+      toast.error(error?.response?.data?.message)
     }
   };
 
@@ -27,7 +29,7 @@ export const Register = () => {
       <div className="w-full max-w-md space-y-8 bg-white p-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-            Sign up
+            Create a fresh account
           </h2>
         </div>
 
@@ -110,10 +112,8 @@ export const Register = () => {
           </div>
           <div className="text-center text-sm text-gray-600">
             Already have an account?{' '}
-            <Link to="/login">
-              <p className="font-medium text-black underline hover:text-gray-700 transition-colors">
-                Login here
-              </p>
+            <Link to="/login" className="font-medium text-black underline hover:text-gray-700 transition-colors">
+              Login
             </Link>
           </div>
         </form>
