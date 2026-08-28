@@ -2,10 +2,14 @@ import { extractInvoiceDataFromGroq } from "../services/groqAI.service.js";
 import { asyncHandler, ApiResponse, ApiError } from "../utils/index.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { Invoice } from "../models/invoice.model.js";
+import { tokenCountVerify } from "../services/Invoice.service.js";
 
 export const groqParse = asyncHandler(async (req, res, next) => {
   try {
     const imgLocalPath = req.file?.path;
+    const userId = req.user?._id;
+
+    const uploadCount = await tokenCountVerify(userId);
 
     if (!imgLocalPath) {
       return next(new ApiError(400, "Please provide us an image file."));
@@ -88,6 +92,16 @@ export const detailedInvoice = asyncHandler(async (req, res, next) => {
         "Detailed Invoice fetched successfully."
       )
     );
+  } catch (error) {
+    return next(new ApiError(500, "Internal error!!!", [error.message]));
+  }
+});
+
+export const deleteInvoice = asyncHandler(async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    await Invoice.deleteOne({ _id: id });
+    return res.json(new ApiResponse(200, {}, "Invoice deleted successfully."));
   } catch (error) {
     return next(new ApiError(500, "Internal error!!!", [error.message]));
   }

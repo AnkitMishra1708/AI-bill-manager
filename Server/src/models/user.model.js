@@ -18,6 +18,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please add password"],
     },
+    uploadCount: {
+      type: Number,
+      default: 2,
+    },
     refreshToken: {
       type: String,
     },

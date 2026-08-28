@@ -18,7 +18,7 @@ app.use(express.static("public"));
 app.use(cookieParser());
 
 import userRoute from "./routes/user.route.js";
-import invoiceRoute from "./routes/invoiceRoute.route.js";
+import invoiceRoute from "./routes/invoice.route.js";
 
 app.use("/api/v1/users", userRoute);
 app.use("/api/v1/invoice", invoiceRoute);

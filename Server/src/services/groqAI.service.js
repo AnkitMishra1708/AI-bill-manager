@@ -1,5 +1,5 @@
 import Groq from "groq-sdk";
-import { ApiError } from "../utils/ApiError.js";
+import { ApiError } from "../utils/index.js";
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
@@ -73,6 +73,7 @@ export const extractInvoiceDataFromGroq = async (imageUrl) => {
       parsedData,
     };
   } catch (error) {
+    if (error instanceof ApiError) throw error;
     throw new ApiError(500, "Something went wrong while scanning image.", [
       error.message,
     ]);

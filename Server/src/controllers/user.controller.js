@@ -138,6 +138,20 @@ export const logoutUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "User logged Out successfully."));
 });
 
+export const deleteUser = asyncHandler(async (req, res) => {
+  await User.findByIdAndDelete(req.user.id);
+
+  const option = {
+    httpOnly: true,
+    secure: true,
+  };
+
+  return res
+    .clearCookie("accessToken", option)
+    .clearCookie("refreshToken", option)
+    .json(new ApiResponse(200, {}, "User account deleted successfully."));
+});
+
 export const getCurrentUser = asyncHandler(async (req, res) => {
   return res.json(
     new ApiResponse(200, req.user, "Current user fetched successfully.")
