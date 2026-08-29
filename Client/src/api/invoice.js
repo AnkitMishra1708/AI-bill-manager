@@ -15,3 +15,8 @@ export const allInvoiceApi = () => {
 export const detailedInvoiceApi = (id) => {
   return api.get(`/invoice/detailed-invoice/${id}`);
 };
+
+export const deleteInvoiceApi = (id) => {
+  return api.get(`/invoice/delete-invoice/${id}`);
+};
+

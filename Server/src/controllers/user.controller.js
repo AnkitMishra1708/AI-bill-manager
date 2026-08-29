@@ -1,6 +1,8 @@
 import { asyncHandler, ApiResponse, ApiError } from "../utils/index.js";
 import { User } from "../models/user.model.js";
 import jwt from "jsonwebtoken";
+import { Invoice } from "../models/invoice.model.js";
+import mongoose from "mongoose";
 
 export const generateAccessAndRefreshToken = async (userId, _, next) => {
   try {
@@ -139,17 +141,35 @@ export const logoutUser = asyncHandler(async (req, res) => {
 });
 
 export const deleteUser = asyncHandler(async (req, res) => {
-  await User.findByIdAndDelete(req.user.id);
+  const session = await mongoose.startSession();
 
-  const option = {
-    httpOnly: true,
-    secure: true,
-  };
+  try {
+    session.startTransaction();
 
-  return res
-    .clearCookie("accessToken", option)
-    .clearCookie("refreshToken", option)
-    .json(new ApiResponse(200, {}, "User account deleted successfully."));
+    await Invoice.deleteMany({ user: req.user.id }).session(session);
+    await User.findByIdAndDelete(req.user.id).session(session);
+
+    await session.commitTransaction();
+    session.endSession();
+
+    const option = {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    };
+
+    return res
+      .clearCookie("accessToken", option)
+      .clearCookie("refreshToken", option)
+      .json(new ApiResponse(200, {}, "User account deleted successfully."));
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+
+    return next(
+      new ApiError(500, null, error?.message || "Failed to delete account.")
+    );
+  }
 });
 
 export const getCurrentUser = asyncHandler(async (req, res) => {

@@ -9,7 +9,7 @@ export const groqParse = asyncHandler(async (req, res, next) => {
     const imgLocalPath = req.file?.path;
     const userId = req.user?._id;
 
-    const uploadCount = await tokenCountVerify(userId);
+    await tokenCountVerify(userId);
 
     if (!imgLocalPath) {
       return next(new ApiError(400, "Please provide us an image file."));

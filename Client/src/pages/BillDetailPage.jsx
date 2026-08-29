@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ChevronLeft, ChevronDown, CircleHelp, ChevronUp } from "lucide-react";
-import { detailedInvoiceApi } from "../api/invoice"
+import { ChevronLeft, ChevronDown, CircleHelp, ChevronUp, Trash } from "lucide-react";
+import { deleteInvoiceApi, detailedInvoiceApi } from "../api/invoice"
 import { StatCard, FormatDate, LoadingSpinner } from "../components/index.js"
+import { Modal } from "../components/Modal.jsx";
+import toast from "react-hot-toast";
 
 export const BillDetailPage = () => {
   const { id } = useParams();
@@ -12,6 +14,7 @@ export const BillDetailPage = () => {
   const [view, setView] = useState("list");
   const [expanded, setExpanded] = useState(false);
   const [showJson, setShowJson] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const loadBill = async () => {
@@ -30,6 +33,18 @@ export const BillDetailPage = () => {
     loadBill();
   }, [id]);
 
+  const handleDeleteInvoice = async () => {
+    try {
+      await deleteInvoiceApi(id);
+      setIsModalOpen(false);
+      toast.success("Invoice Deleted!")
+      navigate("/");
+    } catch (err) {
+      setError(err.message)
+      console.log(err.message);
+    }
+  }
+
   if (loading) return <LoadingSpinner />;
   if (error) {
     return (<p className='text-3xl font-bold'>Oops, something went wrong.</p>)
@@ -47,7 +62,21 @@ export const BillDetailPage = () => {
   const maxForBar = sortedForBreakdown[0]?.totalPrice || 1;
   return (
     <div className="max-w-3xl mx-auto ">
-      <BackLink />
+      <div className="flex gap-6 justify-between items-center">
+        <BackLink />
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="mt-6 cursor-pointer flex items-center justify-center gap-2 rounded-lg bg-red-400 text-white font-medium py-2.5 px-2 hover:bg-red-600 transition-colors disabled:opacity-60"
+        >
+          <Trash size={16} />
+        </button>
+        <Modal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onConfirm={handleDeleteInvoice}
+          title="Are you sure you want to delete this invoice?"
+        />
+      </div>
 
       <div className="mt-4 relative rounded-lg overflow-hidden border border-gray-200 h-22 sm:h-64">
         {bill.imageUrl ? (

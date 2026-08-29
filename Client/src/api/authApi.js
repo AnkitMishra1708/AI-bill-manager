@@ -12,6 +12,10 @@ export const logoutUser = () => {
   return api.post("/users/logout-user");
 };
 
+export const deleteUser = () => {
+  return api.post("/users/delete-user");
+};
+
 export const getCurrentUser = () => {
   return api.get("/users/get-current-user");
 };

@@ -1,21 +1,37 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { LogOut } from "lucide-react";
+import { LogOut, Trash } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { FormatDate } from "../components/index"
 import toast from 'react-hot-toast';
+import { deleteUser } from "../api/authApi";
+import { Modal } from "../components/Modal";
 
 export const Profile = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  const [loggingOut, setLoggingOut] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null)
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   async function handleLogout() {
-    setLoggingOut(true);
+    setLoading(true);
     try {
       await logout();
       toast.success("Logged Out")
+    } catch {
+      setError(err.message)
+    } finally {
+      navigate("/login");
+    }
+  }
+
+  async function handleDeleteAcc() {
+    setLoading(true);
+    try {
+      await deleteUser()
+      setIsModalOpen(false);
+      toast.success("Account Deleted")
     } catch {
       setError(err.message)
     } finally {
@@ -33,19 +49,35 @@ export const Profile = () => {
 
       <div className="rounded-lg border border-gray-200 bg-white divide-y divide-gray-100">
         <Field label="Name" value={user.fullName} />
-        <Field label="Email" value={user.email} />
+        <Field label="Email" value={user.email} mono />
         <Field label="User ID" value={user._id} mono />
         <Field label="Account created on" value={FormatDate(user.createdAt)} />
       </div>
 
-      <button
-        onClick={handleLogout}
-        disabled={loggingOut}
-        className="mt-6 w-full cursor-pointer flex items-center justify-center gap-2 rounded-lg bg-red-50 text-red-700 font-medium py-2.5 hover:bg-red-100 transition-colors disabled:opacity-60"
-      >
-        <LogOut size={16} />
-        {loggingOut ? "Logging out…" : "Log out"}
-      </button>
+      <div className="flex flex-col">
+        <button
+          onClick={handleLogout}
+          disabled={loading}
+          className="mt-6 w-full cursor-pointer flex items-center justify-center gap-2 rounded-lg bg-red-50 text-red-700 font-medium py-2.5 hover:bg-red-100 transition-colors disabled:opacity-60"
+        >
+          <LogOut size={16} />
+          {loading ? "Logging out…" : "Log out"}
+        </button>
+        <button
+          onClick={() => setIsModalOpen(true)}
+          disabled={loading}
+          className="mt-6 w-full cursor-pointer flex items-center justify-center gap-2 rounded-lg bg-black text-white font-medium py-2.5 hover:bg-gray-800 transition-colors disabled:opacity-60"
+        >
+          <Trash size={16} />
+          {loading ? "Deleting…" : "Throw account in trash"}
+        </button>
+        <Modal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onConfirm={handleDeleteAcc}
+          title="Are you sure you want to delete this account permanently?"
+        />
+      </div>
     </div>
   );
 }
