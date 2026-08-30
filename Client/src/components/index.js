@@ -4,6 +4,8 @@ import { SearchBar } from "./SearchBar.jsx";
 import { StatCard } from "./StatCard.jsx";
 import { FormatDate } from "./FormatDate.jsx";
 import { LoadingSpinner } from "./LoadingSpinner.jsx";
+import { Modal } from "./Modal.jsx";
+import { PricingCard } from "./PricingCard.jsx";
 
 export {
   BillRow,
@@ -12,4 +14,6 @@ export {
   StatCard,
   FormatDate,
   LoadingSpinner,
+  Modal,
+  PricingCard,
 };

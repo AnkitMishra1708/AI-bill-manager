@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ChevronLeft, ChevronDown, CircleHelp, ChevronUp, Trash } from "lucide-react";
 import { deleteInvoiceApi, detailedInvoiceApi } from "../api/invoice"
-import { StatCard, FormatDate, LoadingSpinner } from "../components/index.js"
-import { Modal } from "../components/Modal.jsx";
+import { StatCard, FormatDate, LoadingSpinner, Modal } from "../components/index.js"
 import toast from "react-hot-toast";
 
 export const BillDetailPage = () => {
@@ -26,7 +25,6 @@ export const BillDetailPage = () => {
       } catch (err) {
         setLoading(false)
         setError(err.message)
-        console.log(err.message);
       }
     }
 
@@ -41,7 +39,6 @@ export const BillDetailPage = () => {
       navigate("/");
     } catch (err) {
       setError(err.message)
-      console.log(err.message);
     }
   }
 
@@ -62,11 +59,11 @@ export const BillDetailPage = () => {
   const maxForBar = sortedForBreakdown[0]?.totalPrice || 1;
   return (
     <div className="max-w-3xl mx-auto ">
-      <div className="flex gap-6 justify-between items-center">
+      <div className="flex justify-between items-center">
         <BackLink />
         <button
           onClick={() => setIsModalOpen(true)}
-          className="mt-6 cursor-pointer flex items-center justify-center gap-2 rounded-lg bg-red-400 text-white font-medium py-2.5 px-2 hover:bg-red-600 transition-colors disabled:opacity-60"
+          className="cursor-pointer flex items-center justify-center gap-2 rounded-lg bg-red-500 text-white font-medium py-2.5 px-2 hover:bg-red-600 transition-colors disabled:opacity-60"
         >
           <Trash size={16} />
         </button>

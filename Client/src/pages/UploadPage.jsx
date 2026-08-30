@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ChevronLeft, Upload as UploadIcon } from "lucide-react";
 import { parseInvoice } from "../components/ParseInvoice";
 import { saveInvoiceApi } from "../api/invoice";
 
 export const UploadPage = () => {
+  const navigate = useNavigate();
   const [file, setFile] = useState(null);
   const [extractData, setExtractData] = useState(null);
   const [status, setStatus] = useState("idle");
@@ -104,18 +105,28 @@ export const UploadPage = () => {
             <button
               type="button"
               onClick={() => setStatus("idle")}
-              className="mt-4 cursor-pointer rounded-lg px-5 py-2.5 text-sm font-medium text-red-500 hover:bg-red-100 transition duration-300"
+              className="mt-4 cursor-pointer rounded-lg px-5 py-2.5 text-sm font-medium text-red-500 bg-red-50 hover:bg-red-100 transition duration-300"
             >
               Cancel
             </button>
           </div>
 
-          {error ? <p className="text-red-600 mt-4">{error.errors}</p> : null}
+          {error ? <p className="text-red-600 mt-4 ">{error?.message}</p> : null}
+          {error?.statusCode == 403 ? (
+            <button
+              onClick={() => navigate("/pricing")}
+              className="px-4 py-2 font-medium cursor-pointer underline"
+            >
+              Buy more
+            </button>
+
+          ) : null}
+
         </div>;
 
       case "extracted":
         return <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-stone-300 bg-white px-8 py-24 text-center">
-          <img src={extractData.imageUrl} alt="" />
+          <img src={extractData.imageUrl} alt="" className="w-64 h-auto object-cover" />
           <button
             type="button"
             onClick={handleSave}
@@ -168,6 +179,7 @@ export const UploadPage = () => {
 
   return (
     <div>
+
       {renderContent()}
     </div >
   )

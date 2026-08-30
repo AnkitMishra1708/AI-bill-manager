@@ -28,6 +28,7 @@ export const groqParse = asyncHandler(async (req, res, next) => {
       new ApiResponse(200, extractedData, "Bill created successfully.")
     );
   } catch (error) {
+    if (error instanceof ApiError) throw error;
     return next(new ApiError(500, "Internal error!!!", error.message));
   }
 });

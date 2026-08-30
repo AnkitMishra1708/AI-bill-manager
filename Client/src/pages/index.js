@@ -5,6 +5,7 @@ import { Profile } from "./Profile.jsx";
 import { Register } from "./Register.jsx";
 import { UploadPage } from "./UploadPage.jsx";
 import { ErrorPage } from "./ErrorPage.jsx";
+import { PricingPage } from "./PricingPage.jsx";
 
 export {
   BillDetailPage,
@@ -14,4 +15,5 @@ export {
   Register,
   UploadPage,
   ErrorPage,
+  PricingPage,
 };

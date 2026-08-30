@@ -2,22 +2,22 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LogOut, Trash } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-import { FormatDate } from "../components/index"
+import { FormatDate, Modal } from "../components/index"
 import toast from 'react-hot-toast';
 import { deleteUser } from "../api/authApi";
-import { Modal } from "../components/Modal";
 
 export const Profile = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null)
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeModal, setActiveModal] = useState(null);
 
   async function handleLogout() {
     setLoading(true);
     try {
       await logout();
+      setActiveModal(null)
       toast.success("Logged Out")
     } catch {
       setError(err.message)
@@ -30,7 +30,7 @@ export const Profile = () => {
     setLoading(true);
     try {
       await deleteUser()
-      setIsModalOpen(false);
+      setActiveModal(null)
       toast.success("Account Deleted")
     } catch {
       setError(err.message)
@@ -54,17 +54,24 @@ export const Profile = () => {
         <Field label="Account created on" value={FormatDate(user.createdAt)} />
       </div>
 
-      <div className="flex flex-col">
+      <div className="">
         <button
-          onClick={handleLogout}
+          onClick={() => setActiveModal("logout")}
           disabled={loading}
           className="mt-6 w-full cursor-pointer flex items-center justify-center gap-2 rounded-lg bg-red-50 text-red-700 font-medium py-2.5 hover:bg-red-100 transition-colors disabled:opacity-60"
         >
           <LogOut size={16} />
           {loading ? "Logging out…" : "Log out"}
         </button>
+        <Modal
+          isOpen={activeModal === "logout"}
+          onClose={() => setActiveModal(null)}
+          onConfirm={handleLogout}
+          title="Want to logout?"
+          cancelText="No"
+        />
         <button
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => setActiveModal("delete")}
           disabled={loading}
           className="mt-6 w-full cursor-pointer flex items-center justify-center gap-2 rounded-lg bg-black text-white font-medium py-2.5 hover:bg-gray-800 transition-colors disabled:opacity-60"
         >
@@ -72,8 +79,8 @@ export const Profile = () => {
           {loading ? "Deleting…" : "Throw account in trash"}
         </button>
         <Modal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
+          isOpen={activeModal === "delete"}
+          onClose={() => setActiveModal(null)}
           onConfirm={handleDeleteAcc}
           title="Are you sure you want to delete this account permanently?"
         />

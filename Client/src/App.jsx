@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { AppLayout } from "./layouts/AppLayout";
 import { ProtectedRoute } from "./components/index.js";
-import { BillDetailPage, BillsPage, Login, Profile, Register, UploadPage, ErrorPage } from "./pages/index.js";
+import { BillDetailPage, BillsPage, Login, Profile, Register, UploadPage, ErrorPage, PricingPage } from "./pages/index.js";
 import { Toaster } from 'react-hot-toast';
 
 const router = createBrowserRouter([
@@ -38,6 +38,14 @@ const router = createBrowserRouter([
                 element: (
                     <ProtectedRoute>
                         <BillDetailPage />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "/pricing",
+                element: (
+                    <ProtectedRoute>
+                        <PricingPage />
                     </ProtectedRoute>
                 ),
             },
