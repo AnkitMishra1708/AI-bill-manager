@@ -1,5 +1,4 @@
 import { Check, Minus } from "lucide-react";
-import toast from 'react-hot-toast';
 
 export const PricingCard = ({
     name,
@@ -8,6 +7,8 @@ export const PricingCard = ({
     period = "",
     features,
     buttonText = "Fix the deal",
+    onBuyClick,
+    isLoading
 }) => {
     return (
         <div className="w-full max-w-98.75 font-mono rounded-2xl border border-gray-100 bg-white px-8 pt-12 pb-7 shadow-[0_4px_10px_rgba(0,0,0,0.12)]">
@@ -52,8 +53,8 @@ export const PricingCard = ({
                 ))}
             </div>
 
-            <button onClick={() => toast.error("This feature coming soon...")} className="mt-8 h-12.5 w-full cursor-pointer rounded-xl bg-black hover:bg-gray-800 text-[16px] font-bold text-white shadow-md transition hover:opacity-90">
-                {buttonText}
+            <button onClick={onBuyClick} className="mt-8 h-12.5 w-full cursor-pointer rounded-xl bg-black hover:bg-gray-800 text-[16px] font-bold text-white shadow-md transition hover:opacity-90">
+                {isLoading ? "Processing..." : buttonText}
             </button>
         </div>
     );

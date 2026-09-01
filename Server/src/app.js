@@ -19,10 +19,11 @@ app.use(cookieParser());
 
 import userRoute from "./routes/user.route.js";
 import invoiceRoute from "./routes/invoice.route.js";
+import paymentRoute from "./routes/payment.route.js";
 
 app.use("/api/v1/users", userRoute);
 app.use("/api/v1/invoice", invoiceRoute);
-
+app.use("/api/v1/payment", paymentRoute);
 app.use(errorHandler);
 
 export { app };

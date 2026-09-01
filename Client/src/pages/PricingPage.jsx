@@ -1,11 +1,27 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { PricingCard } from "../components/index"
+import { createOrderApi } from '../api/payment';
 
 export const PricingPage = () => {
+  const [loading, setLoading] = useState(null);
+  const [error, setError] = useState(null);
+
+  const handleTokenPurchase = async (subscriptionsType) => {
+    setLoading(subscriptionsType);
+    try {
+      const res = await createOrderApi({ subscriptionsType })
+      console.log(res);
+      setLoading(null);
+    } catch (error) {
+      setLoading(null)
+      setError(error.message)
+    }
+  }
+
   return (
     <>
-      <div className='flex justify-center font-bold text-5xl'>Subscribtions</div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 justify-items-center items-center mt-5">
+      <div className='flex justify-center font-bold text-5xl'>Subscriptions</div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 justify-items-center items-center mt-7">
         <PricingCard
           name="Starter"
           members="Enjoy the show"
@@ -17,6 +33,8 @@ export const PricingPage = () => {
             { text: "Support team full assist", included: false },
             { text: "Help the developer", included: false },
           ]}
+          onBuyClick={() => handleTokenPurchase('Starter')}
+          isLoading={loading === 'Starter'}
         />
         <PricingCard
           name="Premium"
@@ -29,6 +47,8 @@ export const PricingPage = () => {
             { text: "Support team full assist", included: true },
             { text: "Help the developer", included: false },
           ]}
+          onBuyClick={() => handleTokenPurchase('Premium')}
+          isLoading={loading === 'Premium'}
         />
         <PricingCard
           name="Sarkaar"
@@ -41,7 +61,11 @@ export const PricingPage = () => {
             { text: "Support team full assist", included: true },
             { text: "Help the developer", included: true },
           ]}
+          onBuyClick={() => handleTokenPurchase('Sarkaar')}
+          isLoading={loading === 'Sarkaar'}
         />
+
+        {error?.message ? <p className='text-4xl text-red-500'>{error?.message}</p> : null}
       </div>
     </>
   )
