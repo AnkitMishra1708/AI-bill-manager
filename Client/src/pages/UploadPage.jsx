@@ -179,7 +179,6 @@ export const UploadPage = () => {
 
   return (
     <div>
-
       {renderContent()}
     </div >
   )

@@ -7,6 +7,7 @@ import { LoadingSpinner } from "./LoadingSpinner.jsx";
 import { Modal } from "./Modal.jsx";
 import { PricingCard } from "./PricingCard.jsx";
 import { ThankYouPage } from "./ThankYouPage.jsx";
+import { TokenBox } from "./TokenBox.jsx";
 
 export {
   BillRow,
@@ -18,4 +19,5 @@ export {
   Modal,
   PricingCard,
   ThankYouPage,
+  TokenBox,
 };
