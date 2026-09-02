@@ -3,6 +3,7 @@ import { Payment } from "../models/payment.model.js";
 import { subscriptionPlan, subscriptionToken } from "../utils/constants.js";
 import { validateWebhookSignature } from "razorpay/dist/utils/razorpay-utils.js";
 import { User } from "../models/user.model.js";
+import { ApiError } from "../utils/ApiError.js";
 
 export const createOrderService = async (user, subscriptionsType) => {
   try {
@@ -52,22 +53,20 @@ export const validateWebhookService = async (body, webhookSignature) => {
       throw new ApiError(400, "Webhook signature is invalid.");
     }
 
-    // const parsedBody = JSON.parse(body);
-    console.log(body);
+    const parsedBody = JSON.parse(body);
 
     if (isWebhookValid) {
       const { event, payload } = parsedBody;
 
       switch (event) {
         case "payment.captured":
-          await handleyourCapturedLogic(payload);
+          await handleCapturedLogic(payload);
           break;
         case "payment.failed":
-          await handleyourFailedLogic(payload);
+          await handleFailedLogic(payload);
           break;
         default:
-          console.log(`Unhandled event: ${event}`);
-          break;
+          throw new ApiError(400, "Payment event not recognized.");
       }
     }
 
@@ -78,20 +77,19 @@ export const validateWebhookService = async (body, webhookSignature) => {
   }
 };
 
-const handleyourCapturedLogic = async (payload) => {
+const handleCapturedLogic = async (payload) => {
   const paymentEntity = payload?.payment?.entity;
-  console.log(paymentEntity);
 
   const plan = paymentEntity?.notes?.subscriptionsType;
   const tokensToAdd = subscriptionToken[plan];
 
-  const updatedUserToken = await User.findOneAndUpdate(
+  await User.findOneAndUpdate(
     { _id: paymentEntity?.notes?.userId },
     { $inc: { uploadCount: tokensToAdd } },
     { returnDocument: "after" }
   );
 
-  const updatedPayment = await Payment.findOneAndUpdate(
+  await Payment.findOneAndUpdate(
     {
       orderId: paymentEntity?.order_id,
       userId: paymentEntity?.notes?.userId,
@@ -108,10 +106,10 @@ const handleyourCapturedLogic = async (payload) => {
   );
 };
 
-const handleyourFailedLogic = async (payload) => {
+const handleFailedLogic = async (payload) => {
   const paymentEntity = payload?.payment?.entity;
 
-  const updatedPayment = await Payment.findOneAndUpdate(
+  await Payment.findOneAndUpdate(
     {
       orderId: paymentEntity?.order_id,
       userId: paymentEntity?.notes?.userId,
