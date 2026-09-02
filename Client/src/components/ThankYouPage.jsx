@@ -1,11 +1,10 @@
-import React from 'react'
 import { Link } from "react-router-dom"
+import React from 'react'
 
 export const ThankYouPage = () => {
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md w-full bg-white shadow-lg rounded-2xl p-8 text-center border border-gray-100">
-
+        <div className="flex justify-center bg-gray-50 px-4 sm:px-6">
+            <div className="max-w-md bg-white shadow-lg rounded-2xl p-8 text-center border border-gray-100">
                 <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-6">
                     <svg className="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />

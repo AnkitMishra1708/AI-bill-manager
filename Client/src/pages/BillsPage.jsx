@@ -18,7 +18,6 @@ export const BillsPage = () => {
       } catch (error) {
         setLoading(false)
         setError(err.message)
-        console.log(error.message);
       }
     };
 

@@ -37,10 +37,6 @@ export const PricingPage = () => {
             razorpay_signature: response.razorpay_signature,
           };
           const verifyResponse = await VerifyPaymentApi(verificationBody)
-          console.log(verifyResponse);
-          console.log(verifyResponse.data);
-          console.log(verifyResponse.data.data);
-          console.log(verifyResponse.data.data.status);
 
           if (verifyResponse.data.data.status === 'success') {
             setIsPaymentSuccess(true)

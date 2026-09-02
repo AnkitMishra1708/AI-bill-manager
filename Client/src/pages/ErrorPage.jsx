@@ -14,7 +14,6 @@ export const ErrorPage = () => {
     }
   } else if (error instanceof Error) {
     errorMessage = error.message;
-    console.log(error);
   }
 
   return (
