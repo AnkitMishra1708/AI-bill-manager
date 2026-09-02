@@ -10,8 +10,29 @@ export const PricingPage = () => {
     setLoading(subscriptionsType);
     try {
       const res = await createOrderApi({ subscriptionsType })
-      console.log(res);
+      const data = res.data.data.paymentSaved
       setLoading(null);
+      console.log(data);
+
+      const { amount, currency, orderId, notes } = data;
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        amount: amount,
+        currency: currency,
+        order_id: orderId,
+        name: "Bill Vault",
+        description: "Make your invoice safe.",
+        prefill: {
+          name: notes.fullName,
+          email: notes.email,
+        },
+        theme: {
+          color: "#000"
+        }
+      }
+
+      const rzp = new window.Razorpay(options)
+      rzp.open()
     } catch (error) {
       setLoading(null)
       setError(error.message)

@@ -26,6 +26,9 @@ const paymentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    paymentMethod: {
+      type: String,
+    },
     notes: {
       userId: String,
       email: String,
