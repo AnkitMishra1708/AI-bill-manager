@@ -41,7 +41,6 @@ export const createOrderService = async (user, subscriptionsType) => {
 };
 
 export const validateWebhookService = async (body, webhookSignature) => {
-  console.log(body, webhookSignature);
   try {
     const isWebhookValid = validateWebhookSignature(
       body,
@@ -52,6 +51,7 @@ export const validateWebhookService = async (body, webhookSignature) => {
     if (!isWebhookValid) {
       throw new ApiError(400, "Webhook signature is invalid.");
     }
+
     console.log(isWebhookValid);
 
     if (isWebhookValid) {

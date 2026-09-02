@@ -8,6 +8,8 @@ import {
 const router = express.Router();
 
 router.route("/order").post(verifyJwt, createOrder);
-router.route("/webhook").post(validateWebhook);
+router
+  .route("/webhook")
+  .post(express.text({ type: "application/json" }), validateWebhook);
 
 export default router;

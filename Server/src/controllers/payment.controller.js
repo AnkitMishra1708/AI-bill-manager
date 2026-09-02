@@ -22,7 +22,6 @@ export const validateWebhook = asyncHandler(async (req, res, next) => {
   try {
     const body = JSON.stringify(req.body);
     const webhookSignature = req.get("X-Razorpay-Signature");
-    console.log(webhookSignature);
 
     const webhook = await validateWebhookService(body, webhookSignature);
 
