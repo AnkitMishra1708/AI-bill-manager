@@ -8,8 +8,6 @@ import {
 const router = express.Router();
 
 router.route("/order").post(verifyJwt, createOrder);
-router.route("/webhook").post(() => {
-  console.log("Webhook Route hit");
-}, validateWebhook);
+router.route("/webhook").post(validateWebhook);
 
 export default router;
