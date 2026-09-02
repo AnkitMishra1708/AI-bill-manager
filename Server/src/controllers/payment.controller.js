@@ -1,6 +1,7 @@
 import {
   createOrderService,
   validateWebhookService,
+  verifyPaymentService,
 } from "../services/payment.service.js";
 import { asyncHandler, ApiError, ApiResponse } from "../utils/index.js";
 
@@ -27,6 +28,20 @@ export const validateWebhook = asyncHandler(async (req, res, next) => {
 
     return res.json(
       new ApiResponse(200, webhook, "Webhook validate successfully.")
+    );
+  } catch (error) {
+    if (error instanceof ApiError) throw error;
+    return next(new ApiError(500, "Internal error!!!", error.message));
+  }
+});
+
+export const verifyPayment = asyncHandler(async (req, res, next) => {
+  try {
+    const user = req.user;
+    const isVerify = await verifyPaymentService(user);
+
+    return res.json(
+      new ApiResponse(200, { paymentSuccessfull: isVerify }, "Verified user.")
     );
   } catch (error) {
     if (error instanceof ApiError) throw error;

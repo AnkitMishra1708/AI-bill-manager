@@ -77,6 +77,14 @@ export const validateWebhookService = async (body, webhookSignature) => {
   }
 };
 
+export const verifyPaymentService = async (user) => {
+  const payment = await Payment.findOne({ userId: user._id });
+
+  const verifyPaymentStatus = payment?.status === "captured";
+
+  return verifyPaymentStatus;
+};
+
 const handleCapturedLogic = async (payload) => {
   const paymentEntity = payload?.payment?.entity;
 
