@@ -20,13 +20,9 @@ export const createOrder = asyncHandler(async (req, res, next) => {
 
 export const validateWebhook = asyncHandler(async (req, res, next) => {
   try {
-    console.log(req.body);
     const body = JSON.stringify(req.body);
-    const webhookSignature = req.headers["X-Razorpay-Signature"];
-
-    if (!webhookSignature) {
-      throw new ApiError(400, "Webhook signature header is missing.");
-    }
+    const webhookSignature = req.get("X-Razorpay-Signature");
+    console.log(webhookSignature);
 
     const webhook = await validateWebhookService(body, webhookSignature);
 
