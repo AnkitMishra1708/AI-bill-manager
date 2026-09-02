@@ -10,11 +10,11 @@ export const PricingPage = () => {
 
   const verifyPayment = async () => {
     const res = await VerifyPaymentApi();
-    const data = res?.data
+    const data = res?.data?.paymentSuccessfull
     console.log(data);
     console.log(data?.paymentSuccessfull);
 
-    if (data.paymentSuccessfull) {
+    if (data) {
       setIsPaymentSuccess(true)
       toast.success("Payment Successfull.")
     } else {
