@@ -39,9 +39,10 @@ export const PricingPage = () => {
           const verifyResponse = await VerifyPaymentApi(verificationBody)
           console.log(verifyResponse);
           console.log(verifyResponse.data);
-          console.log(verifyResponse.data.status);
+          console.log(verifyResponse.data.data);
+          console.log(verifyResponse.data.data.status);
 
-          if (verifyResponse.data.status === 'success') {
+          if (verifyResponse.data.data.status === 'success') {
             setIsPaymentSuccess(true)
             toast.success('Payment Successfully!');
           } else {
