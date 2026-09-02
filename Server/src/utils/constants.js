@@ -6,6 +6,6 @@ export const subscriptionPlan = {
 
 export const subscriptionToken = {
   Starter: 3,
-  Premium: 5,
-  Sarkaar: 15
+  Premium: 15,
+  Sarkaar: 30,
 };
