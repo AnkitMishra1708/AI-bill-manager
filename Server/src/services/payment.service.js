@@ -52,10 +52,12 @@ export const validateWebhookService = async (body, webhookSignature) => {
       throw new ApiError(400, "Webhook signature is invalid.");
     }
 
-    console.log("Body 1:",body);
+    const parsedBody = JSON.parse(body);
+
+    console.log("Body 1:",parsedBody);
   
     if (isWebhookValid) {
-      const { event, payload } = body;
+      const { event, payload } = parsedBody;
       console.log("Body 2:",event,payload);
       
       switch (event) {
