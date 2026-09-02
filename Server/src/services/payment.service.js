@@ -52,14 +52,12 @@ export const validateWebhookService = async (body, webhookSignature) => {
       throw new ApiError(400, "Webhook signature is invalid.");
     }
 
-    const parsedBody = JSON.parse(body);
+    // const parsedBody = JSON.parse(body);
+    console.log(body);
 
-    console.log("Body 1:",parsedBody);
-  
     if (isWebhookValid) {
       const { event, payload } = parsedBody;
-      console.log("Body 2:",event,payload);
-      
+
       switch (event) {
         case "payment.captured":
           await handleyourCapturedLogic(payload);
@@ -101,6 +99,7 @@ const handleyourCapturedLogic = async (payload) => {
     {
       $set: {
         paymentId: paymentEntity?.id,
+        subscriptionsType: paymentEntity?.notes?.subscriptionsType,
         paymentMethod: paymentEntity?.method,
         status: paymentEntity?.status,
       },
@@ -120,6 +119,7 @@ const handleyourFailedLogic = async (payload) => {
     {
       $set: {
         paymentId: paymentEntity?.id,
+        subscriptionsType: paymentEntity?.notes?.subscriptionsType,
         paymentMethod: paymentEntity?.method,
         status: paymentEntity?.status,
       },
