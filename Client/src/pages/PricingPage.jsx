@@ -8,10 +8,11 @@ export const PricingPage = () => {
   const [error, setError] = useState(null);
   const [isPaymentSuccess, setIsPaymentSuccess] = useState(false)
 
-  useEffect(() => { verifyPayment() }, [])
   const verifyPayment = async () => {
     const res = await VerifyPaymentApi();
-    const data = res?.data
+    const data = res.data
+    console.log(data);
+    console.log(data.paymentSuccessfull);
 
     if (data?.paymentSuccessfull) {
       setIsPaymentSuccess(true)
