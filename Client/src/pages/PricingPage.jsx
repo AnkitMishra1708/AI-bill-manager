@@ -14,7 +14,7 @@ export const PricingPage = () => {
     console.log(data);
     console.log(data?.paymentSuccessfull);
 
-    if (data?.paymentSuccessfull) {
+    if (data.paymentSuccessfull) {
       setIsPaymentSuccess(true)
       toast.success("Payment Successfull.")
     } else {
