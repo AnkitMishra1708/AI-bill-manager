@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { PricingCard, ThankYouPage } from "../components/index"
 import { createOrderApi, VerifyPaymentApi } from '../api/payment';
 import toast from 'react-hot-toast';
@@ -8,13 +8,12 @@ export const PricingPage = () => {
   const [error, setError] = useState(null);
   const [isPaymentSuccess, setIsPaymentSuccess] = useState(false)
 
+  useEffect(() => { verifyPayment() }, [])
   const verifyPayment = async () => {
     const res = await VerifyPaymentApi();
-    const data = res?.data?.paymentSuccessfull
-    console.log(data);
-    console.log(data?.paymentSuccessfull);
+    const data = res?.data
 
-    if (data) {
+    if (data?.paymentSuccessfull) {
       setIsPaymentSuccess(true)
       toast.success("Payment Successfull.")
     } else {
