@@ -37,12 +37,24 @@ export const validateWebhook = asyncHandler(async (req, res, next) => {
 
 export const verifyPayment = asyncHandler(async (req, res, next) => {
   try {
-    const user = req.user;
-    const isVerify = await verifyPaymentService(user);
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
+      req.body;
 
-    return res.json(
-      new ApiResponse(200, { paymentSuccessfull: isVerify }, "Verified user.")
+    const isVerify = await verifyPaymentService(
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature
     );
+
+    if (isVerify) {
+      return res.json(
+        new ApiResponse(200, { status: "success" }, "Payment successfull.")
+      );
+    } else {
+      return res.json(
+        new ApiResponse(200, { status: "failed" }, "Payment failed.")
+      );
+    }
   } catch (error) {
     if (error instanceof ApiError) throw error;
     return next(new ApiError(500, "Internal error!!!", error.message));

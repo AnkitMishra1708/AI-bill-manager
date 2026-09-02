@@ -4,6 +4,7 @@ import { subscriptionPlan, subscriptionToken } from "../utils/constants.js";
 import { validateWebhookSignature } from "razorpay/dist/utils/razorpay-utils.js";
 import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
+import crypto from "crypto";
 
 export const createOrderService = async (user, subscriptionsType) => {
   try {
@@ -77,12 +78,23 @@ export const validateWebhookService = async (body, webhookSignature) => {
   }
 };
 
-export const verifyPaymentService = async (user) => {
-  const payment = await Payment.findOne({ userId: user._id });
+export const verifyPaymentService = async (
+  razorpay_order_id,
+  razorpay_payment_id,
+  razorpay_signature
+) => {
+  const sign = razorpay_order_id + "|" + razorpay_payment_id;
 
-  const verifyPaymentStatus = payment?.status === "captured";
+  const expectedSign = crypto
+    .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+    .update(sign.toString())
+    .digest("hex");
 
-  return verifyPaymentStatus;
+  if (razorpay_signature === expectedSign) {
+    return true;
+  } else {
+    return false;
+  }
 };
 
 const handleCapturedLogic = async (payload) => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { PricingCard, ThankYouPage } from "../components/index"
 import { createOrderApi, VerifyPaymentApi } from '../api/payment';
 import toast from 'react-hot-toast';
@@ -6,21 +6,7 @@ import toast from 'react-hot-toast';
 export const PricingPage = () => {
   const [loading, setLoading] = useState(null);
   const [error, setError] = useState(null);
-  const [isPaymentSuccess, setIsPaymentSuccess] = useState(false)
-
-  const verifyPayment = async () => {
-    const res = await VerifyPaymentApi();
-    const data = res.data
-    console.log(data);
-    console.log(data.paymentSuccessfull);
-
-    if (data?.paymentSuccessfull) {
-      setIsPaymentSuccess(true)
-      toast.success("Payment Successfull.")
-    } else {
-      toast.error("Payment failed.")
-    }
-  }
+  const [isPaymentSuccess, setIsPaymentSuccess] = useState(false);
 
   const handleTokenPurchase = async (subscriptionsType) => {
     setLoading(subscriptionsType);
@@ -44,7 +30,21 @@ export const PricingPage = () => {
         theme: {
           color: "#000"
         },
-        handler: verifyPayment
+        handler: async function (response) {
+          const verificationBody = {
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature,
+          };
+          const verifyResponse = await VerifyPaymentApi(verificationBody)
+
+          if (verifyResponse.data.status === 'success') {
+            setIsPaymentSuccess(true)
+            toast.success('Payment Successfully!');
+          } else {
+            toast.error('Payment Failed!');
+          }
+        }
       }
 
       const rzp = new window.Razorpay(options)
