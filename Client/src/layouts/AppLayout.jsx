@@ -44,7 +44,7 @@ export const AppLayout = () => {
         >
           <div className="flex items-center justify-between p-5 border-b border-gray-200 shrink-0">
             <h2 className="text-xl font-bold text-stone-900">
-              Menu
+              Rizz 🗿
             </h2>
 
             <button

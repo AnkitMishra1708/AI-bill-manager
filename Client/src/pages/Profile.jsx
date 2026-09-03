@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LogOut, Trash } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-import { FormatDate, Modal } from "../components/index"
+import { FormatDate, LoadingSpinner, Modal } from "../components/index"
 import toast from 'react-hot-toast';
 import { deleteUser } from "../api/authApi";
 
@@ -10,16 +10,20 @@ export const Profile = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [modalLoading, setModalLoading] = useState(null);
   const [error, setError] = useState(null)
   const [activeModal, setActiveModal] = useState(null);
 
   async function handleLogout() {
     setLoading(true);
+    setModalLoading("logout")
     try {
       await logout();
       setActiveModal(null)
+      setModalLoading()
       toast.success("Logged Out")
     } catch {
+      setModalLoading(null)
       setError(err.message)
     } finally {
       navigate("/login");
@@ -28,11 +32,14 @@ export const Profile = () => {
 
   async function handleDeleteAcc() {
     setLoading(true);
+    setModalLoading("deleteAcc")
     try {
       await deleteUser()
       setActiveModal(null)
+      setModalLoading(null)
       toast.success("Account Deleted")
     } catch {
+      setModalLoading(null)
       setError(err.message)
     } finally {
       navigate("/login");
@@ -40,6 +47,7 @@ export const Profile = () => {
   }
 
   if (!user) return null;
+  if (loading) return <LoadingSpinner />;
   if (error) {
     return (<p className='text-3xl font-bold'>Oops, something went wrong.</p>)
   }
@@ -57,11 +65,10 @@ export const Profile = () => {
       <div className="">
         <button
           onClick={() => setActiveModal("logout")}
-          disabled={loading}
           className="mt-6 w-full cursor-pointer flex items-center justify-center gap-2 rounded-lg bg-red-50 text-red-700 font-medium py-2.5 hover:bg-red-100 transition-colors disabled:opacity-60"
         >
           <LogOut size={16} />
-          {loading ? "Logging out…" : "Log out"}
+          {modalLoading === "logout" ? "Logging out…" : "Log out"}
         </button>
         <Modal
           isOpen={activeModal === "logout"}
@@ -72,11 +79,10 @@ export const Profile = () => {
         />
         <button
           onClick={() => setActiveModal("delete")}
-          disabled={loading}
           className="mt-6 w-full cursor-pointer flex items-center justify-center gap-2 rounded-lg bg-black text-white font-medium py-2.5 hover:bg-gray-800 transition-colors disabled:opacity-60"
         >
           <Trash size={16} />
-          {loading ? "Deleting…" : "Throw account in trash"}
+          {modalLoading === "deleteAcc" ? "Deleting…" : "Throw account in trash"}
         </button>
         <Modal
           isOpen={activeModal === "delete"}

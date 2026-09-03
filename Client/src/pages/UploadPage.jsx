@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ChevronLeft, Upload as UploadIcon } from "lucide-react";
 import { parseInvoice } from "../components/ParseInvoice";
 import { saveInvoiceApi } from "../api/invoice";
+import toast from 'react-hot-toast';
 import { useAuth } from "../context/AuthContext";
 
 export const UploadPage = () => {
@@ -38,10 +39,19 @@ export const UploadPage = () => {
         setStatus("error");
         return;
       }
+      return data;
     } catch (error) {
       setError(error.response.data)
       setLoading(false);
     }
+  };
+
+  const onExtractClick = () => {
+    toast.promise(handleExtract(), {
+      loading: 'Extracting invoice data...',
+      success: 'Invoice extracted successfully!',
+      error: 'Could not extract data.',
+    });
   };
 
   const handleSave = async () => {
@@ -49,6 +59,7 @@ export const UploadPage = () => {
       if (!file) return;
       setLoading(true);
       await saveInvoiceApi(payload);
+      setLoading(true);
       setStatus("success")
     } catch (error) {
       setLoading(false);
@@ -101,7 +112,7 @@ export const UploadPage = () => {
           <div className="flex gap-3">
             <button
               type="button"
-              onClick={handleExtract}
+              onClick={onExtractClick}
               disabled={loading}
               className="mt-4 cursor-pointer rounded-lg bg-black px-5 py-2.5 text-sm font-medium hover:bg-gray-700 text-white disabled:cursor-not-allowed disabled:opacity-50"
             >
@@ -135,9 +146,10 @@ export const UploadPage = () => {
           <button
             type="button"
             onClick={handleSave}
+            disabled={loading}
             className="mt-4 cursor-pointer rounded-lg bg-black px-5 py-2.5 text-sm font-medium text-white hover:bg-gray-800"
           >
-            Save
+            {loading ? "Saving..." : "Save"}
           </button>
         </div>;
 

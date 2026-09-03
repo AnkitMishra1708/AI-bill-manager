@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 
 export const Register = () => {
   const navigate = useNavigate();
-
+  const [loading, setLoading] = useState(false);
   const [fullName, setfullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,12 +14,14 @@ export const Register = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-
+    setLoading(true)
     try {
       await registerUser({ fullName, email, password });
+      setLoading(false);
       toast.success("User registered")
       navigate("/login");
     } catch (error) {
+      setLoading(false);
       toast.error(error?.response?.data?.message)
     }
   };
@@ -107,7 +109,7 @@ export const Register = () => {
               type="submit"
               className="group relative flex w-full justify-center rounded-md bg-black px-3 py-2.5 text-sm font-semibold text-white hover:bg-gray-800 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-black transition-colors duration-200"
             >
-              Login
+              {loading ? "Registering..." : "Register"}
             </button>
           </div>
           <div className="text-center text-sm text-gray-600">
