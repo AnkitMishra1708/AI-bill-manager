@@ -40,10 +40,9 @@ export const PricingPage = () => {
           };
           const verifyResponse = await VerifyPaymentApi(verificationBody)
           const data = verifyResponse.data.data
-          console.table(verifyResponse);
 
           if (data.status === 'success') {
-            updateToken(data?.updatedToken)
+            updateToken(data?.isVerify?.updatedToken)
             setIsPaymentSuccess(true)
             toast.success('Payment Successfully!');
           } else {
