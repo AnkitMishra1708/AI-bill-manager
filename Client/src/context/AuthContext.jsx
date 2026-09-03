@@ -11,6 +11,11 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [tokenBalance, setTokenBalance] = useState(null);
+
+  const updateToken = (newBalance) => {
+    setTokenBalance(newBalance);
+  };
 
   const login = async (email, password) => {
     const response = await loginUser({
@@ -20,6 +25,7 @@ export const AuthProvider = ({ children }) => {
 
     const loggedInUser = response.data.data.user;
     setUser(loggedInUser);
+    setTokenBalance(loggedInUser?.uploadCount)
     return loggedInUser;
   };
 
@@ -32,7 +38,7 @@ export const AuthProvider = ({ children }) => {
   const checkAuth = async () => {
     try {
       const response = await getCurrentUser();
-
+      setTokenBalance(response.data.data?.uploadCount)
       setUser(response.data.data);
     } catch (error) {
       setUser(null);
@@ -52,6 +58,8 @@ export const AuthProvider = ({ children }) => {
         loading,
         login,
         logout,
+        tokenBalance,
+        updateToken
       }}
     >
       {children}

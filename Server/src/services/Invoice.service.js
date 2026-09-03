@@ -21,7 +21,7 @@ export const tokenCountVerify = async (userId) => {
       );
     }
 
-    return updatedUser;
+    return { UpdatedToken: updatedUser?.uploadCount };
   } catch (error) {
     if (error instanceof ApiError) throw error;
     throw new ApiError(500, "Something went wrong.", [error.message]);

@@ -39,16 +39,22 @@ export const verifyPayment = asyncHandler(async (req, res, next) => {
   try {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
       req.body;
+    const user = req.user;
 
     const isVerify = await verifyPaymentService(
       razorpay_order_id,
       razorpay_payment_id,
-      razorpay_signature
+      razorpay_signature,
+      user
     );
 
-    if (isVerify) {
+    if (isVerify.signatureIsVerify) {
       return res.json(
-        new ApiResponse(200, { status: "success" }, "Payment successfull.")
+        new ApiResponse(
+          200,
+          { status: "success", isVerify },
+          "Payment successfull."
+        )
       );
     } else {
       return res.json(

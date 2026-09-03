@@ -6,7 +6,7 @@ import { TokenBox } from "../components/TokenBox";
 
 export const AppLayout = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, tokenBalance } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const closeSidebar = () => {
@@ -116,11 +116,10 @@ export const AppLayout = () => {
             </div>
 
             <div className="pt-4 ml-8 border-t border-gray-100 mt-auto">
-              <TokenBox count={user?.uploadCount} />
+              <TokenBox count={tokenBalance} />
             </div>
           </div>
         </aside>
-
       </header>
 
       <main className="mx-auto max-w-5xl px-3 py-8">

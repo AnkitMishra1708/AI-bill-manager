@@ -7,9 +7,9 @@ import { tokenCountVerify } from "../services/Invoice.service.js";
 export const groqParse = asyncHandler(async (req, res, next) => {
   try {
     const imgLocalPath = req.file?.path;
-    const userId = req.user?._id;
+    const userId = req.user._id;
 
-    await tokenCountVerify(userId);
+    const newToken = await tokenCountVerify(userId);
 
     if (!imgLocalPath) {
       return next(new ApiError(400, "Please provide us an image file."));
@@ -25,7 +25,11 @@ export const groqParse = asyncHandler(async (req, res, next) => {
     const extractedData = await extractInvoiceDataFromGroq(billCloudinaryUrl);
 
     return res.json(
-      new ApiResponse(200, extractedData, "Bill created successfully.")
+      new ApiResponse(
+        200,
+        { extractedData, newToken },
+        "Invoice extracted successfully."
+      )
     );
   } catch (error) {
     if (error instanceof ApiError) throw error;

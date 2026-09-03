@@ -3,9 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { ChevronLeft, Upload as UploadIcon } from "lucide-react";
 import { parseInvoice } from "../components/ParseInvoice";
 import { saveInvoiceApi } from "../api/invoice";
+import { useAuth } from "../context/AuthContext";
 
 export const UploadPage = () => {
   const navigate = useNavigate();
+  const { updateToken } = useAuth();
   const [file, setFile] = useState(null);
   const [extractData, setExtractData] = useState(null);
   const [status, setStatus] = useState("idle");
@@ -25,11 +27,14 @@ export const UploadPage = () => {
       if (!file) return;
       setLoading(true);
       const response = await parseInvoice(file);
-      setExtractData(response.data.data)
+      const data = response.data.data
+
+      updateToken(data?.newToken?.UpdatedToken)
+      setExtractData(data?.extractData)
       setLoading(false);
       setStatus("extracted")
 
-      if (!(response.data.data?.parsedData?.isValidBill)) {
+      if (!(data?.extractData?.parsedData?.isValidBill)) {
         setStatus("error");
         return;
       }

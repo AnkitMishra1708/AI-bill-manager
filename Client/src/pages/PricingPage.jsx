@@ -4,6 +4,7 @@ import { createOrderApi, VerifyPaymentApi } from '../api/payment';
 import toast from 'react-hot-toast';
 
 export const PricingPage = () => {
+  const { updateToken } = useAuth();
   const [loading, setLoading] = useState(null);
   const [error, setError] = useState(null);
   const [isPaymentSuccess, setIsPaymentSuccess] = useState(false);
@@ -37,8 +38,11 @@ export const PricingPage = () => {
             razorpay_signature: response.razorpay_signature,
           };
           const verifyResponse = await VerifyPaymentApi(verificationBody)
+          const data = verifyResponse.data.data
+          console.table(verifyResponse);
 
-          if (verifyResponse.data.data.status === 'success') {
+          if (data.status === 'success') {
+            updateToken(data?.updatedToken)
             setIsPaymentSuccess(true)
             toast.success('Payment Successfully!');
           } else {

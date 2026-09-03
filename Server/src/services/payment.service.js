@@ -81,7 +81,8 @@ export const validateWebhookService = async (body, webhookSignature) => {
 export const verifyPaymentService = async (
   razorpay_order_id,
   razorpay_payment_id,
-  razorpay_signature
+  razorpay_signature,
+  user
 ) => {
   const sign = razorpay_order_id + "|" + razorpay_payment_id;
 
@@ -91,9 +92,9 @@ export const verifyPaymentService = async (
     .digest("hex");
 
   if (razorpay_signature === expectedSign) {
-    return true;
+    return { signatureIsVerify: true, updatedToken: user?.uploadCount };
   } else {
-    return false;
+    return { signatureIsVerify: false };
   }
 };
 
