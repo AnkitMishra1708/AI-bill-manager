@@ -30,11 +30,11 @@ export const UploadPage = () => {
       const data = response.data.data
 
       updateToken(data?.newToken?.UpdatedToken)
-      setExtractData(data?.extractData)
+      setExtractData(data?.extractedData)
       setLoading(false);
       setStatus("extracted")
 
-      if (!(data?.extractData?.parsedData?.isValidBill)) {
+      if (!(data?.extractedData?.parsedData?.isValidBill)) {
         setStatus("error");
         return;
       }

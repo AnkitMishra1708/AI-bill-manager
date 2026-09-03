@@ -42,6 +42,9 @@ export const PricingPage = () => {
           const data = verifyResponse.data.data
 
           if (data.status === 'success') {
+            console.log(data);
+            console.log(data?.isVerify);
+            console.log(data?.isVerify?.updatedToken);
             updateToken(data?.isVerify?.updatedToken)
             setIsPaymentSuccess(true)
             toast.success('Payment Successfully!');
