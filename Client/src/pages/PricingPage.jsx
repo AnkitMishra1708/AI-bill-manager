@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { PricingCard, ThankYouPage } from "../components/index"
 import { createOrderApi, VerifyPaymentApi } from '../api/payment';
 import toast from 'react-hot-toast';
+import { useAuth } from '../context/AuthContext';
 
 export const PricingPage = () => {
   const { updateToken } = useAuth();
