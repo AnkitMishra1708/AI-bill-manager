@@ -33,6 +33,7 @@ const invoiceSchema = new mongoose.Schema(
     invoiceName: {
       type: String,
       required: [true, "Please add invoice name"],
+      default: "Local Shop",
     },
     totalAmount: {
       type: Number,
@@ -40,6 +41,7 @@ const invoiceSchema = new mongoose.Schema(
     },
     invoiceDate: {
       type: Date,
+      default: Date.now,
     },
     productList: [productSchema],
   },

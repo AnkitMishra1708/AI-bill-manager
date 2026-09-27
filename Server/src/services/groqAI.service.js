@@ -4,7 +4,7 @@ import { ApiError } from "../utils/index.js";
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 const promptText = `
-Analyze the provided image and determine whether it is a valid store bill, receipt, or invoice.
+Analyze the provided image properly and analyze proper name of store and determine whether it is a valid store bill, receipt, or invoice.
 
 Return ONLY valid JSON. No markdown, no explanation, no thinking.
 

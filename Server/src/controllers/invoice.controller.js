@@ -48,7 +48,7 @@ export const saveBillToDb = asyncHandler(async (req, res, next) => {
       productList,
     } = req.body;
 
-    if (!(imageUrl, totalAmount, invoiceNumber || invoiceName, productList)) {
+    if (!(imageUrl, totalAmount, productList)) {
       return next(new ApiError(404, "Information Missing."));
     }
 
@@ -56,9 +56,9 @@ export const saveBillToDb = asyncHandler(async (req, res, next) => {
       user: req.user._id,
       imageUrl,
       invoiceNumber: invoiceNumber || "N/A",
-      invoiceName,
+      invoiceName: invoiceName || "Local Shop",
       totalAmount,
-      invoiceDate: invoiceDate || "N/A",
+      invoiceDate: invoiceDate,
       productList: productList || [],
     });
 
