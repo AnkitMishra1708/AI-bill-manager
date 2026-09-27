@@ -58,7 +58,7 @@ export const extractInvoiceDataFromGroq = async (imageUrl) => {
           ],
         },
       ],
-      model: "qwen/qwen3.6-27b",
+      model: "qwen/qwen3.8-27b",
       reasoning_effort: "none",
       response_format: {
         type: "json_object",
